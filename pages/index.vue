@@ -1,6 +1,5 @@
 <template lang="">
     <div>
-        <Header/>
         <br/>
         <br/>
         <br/>
