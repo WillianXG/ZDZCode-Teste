@@ -2,7 +2,7 @@
     <form>
       <v-text-field
         v-model="state.name"
-        :counter="10"
+        :counter="45"
         :error-messages="v$.name.$errors.map(e => e.$message)"
         label="Name"
         required
@@ -11,38 +11,14 @@
       ></v-text-field>
   
       <v-text-field
-        v-model="state.email"
-        :error-messages="v$.email.$errors.map(e => e.$message)"
-        label="E-mail"
-        required
-        @blur="v$.email.$touch"
-        @input="v$.email.$touch"
+        label="Descrição"
       ></v-text-field>
-  
-      <v-select
-        v-model="state.select"
-        :error-messages="v$.select.$errors.map(e => e.$message)"
-        :items="items"
-        label="Item"
-        required
-        @blur="v$.select.$touch"
-        @change="v$.select.$touch"
-      ></v-select>
-  
-      <v-checkbox
-        v-model="state.checkbox"
-        :error-messages="v$.checkbox.$errors.map(e => e.$message)"
-        label="Do you agree?"
-        required
-        @blur="v$.checkbox.$touch"
-        @change="v$.checkbox.$touch"
-      ></v-checkbox>
-  
+
       <v-btn
         class="me-4"
-        @click="v$.$validate"
+        @click="handleSubmit"
       >
-        submit
+        Salvar
       </v-btn>
       <v-btn @click="clear">
         clear
@@ -57,27 +33,16 @@ import { email, required } from '@vuelidate/validators'
 const initialState = {
   name: '',
   email: '',
-  select: null,
-  checkbox: null,
 }
 
 const state = reactive({
   ...initialState,
 })
 
-const items = [
-  'Item 1',
-  'Item 2',
-  'Item 3',
-  'Item 4',
-]
 
 const rules = {
   name: { required },
-  email: { required, email },
-  select: { required },
-  items: { required },
-  checkbox: { required },
+  email: {  email },
 }
 
 const v$ = useVuelidate(rules, state)
@@ -87,6 +52,17 @@ function clear () {
 
   for (const [key, value] of Object.entries(initialState)) {
     state[key] = value
+  }
+}
+
+function handleSubmit() {
+  v$.value.$validate()
+
+  if (!v$.value.$error) {
+    console.log('Tudo certo!')
+  }
+  else{
+  console.log("Algo deu errado")
   }
 }
 </script>
