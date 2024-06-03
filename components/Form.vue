@@ -11,6 +11,7 @@
       ></v-text-field>
   
       <v-text-field
+      v-model="state.descricao"
         label="Descrição"
       ></v-text-field>
 
@@ -23,6 +24,13 @@
       <v-btn @click="clear">
         clear
       </v-btn>
+
+      <pre>
+      {
+        "name": "{{ state.name }}",
+        "descricao": "{{ state.descricao }}"  
+      }
+      </pre>
     </form>
   </template>
 <script setup>
@@ -30,9 +38,10 @@ import { reactive } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
 import { email, required } from '@vuelidate/validators'
 
+
 const initialState = {
   name: '',
-  email: '',
+  descricao: ''
 }
 
 const state = reactive({
