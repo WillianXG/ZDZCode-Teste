@@ -72,4 +72,7 @@ yarn preview
 bun run preview
 ```
 
+
+Abra a pasta API no visual studio comunity 2022 e rode por la
+
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
