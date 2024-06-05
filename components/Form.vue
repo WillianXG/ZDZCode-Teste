@@ -1,43 +1,21 @@
 <template>
-    <form>
-      <v-text-field
-        v-model="state.name"
-        :counter="45"
-        :error-messages="v$.name.$errors.map(e => e.$message)"
-        label="Name"
-        required
-        @blur="v$.name.$touch"
-        @input="v$.name.$touch"
-      ></v-text-field>
-  
-      <v-text-field
-      v-model="state.descricao"
-        label="Descrição"
-      ></v-text-field>
+  <form>
+    <v-text-field v-model="state.name" :counter="45" :error-messages="v$.name.$errors.map(e => e.$message)" label="Name"
+      required @blur="v$.name.$touch" @input="v$.name.$touch"></v-text-field>
 
-      <v-btn
-        class="me-4"
-        @click="handleSubmit"
-      >
-        Salvar
-      </v-btn>
-      <v-btn @click="clear">
-        clear
-      </v-btn>
+    <v-text-field v-model="state.descricao" label="Descrição"></v-text-field>
 
-      <pre>
-      {
-        "name": "{{ state.name }}",
-        "descricao": "{{ state.descricao }}"  
-      }
-      </pre>
-    </form>
-  </template>
+    <v-btn class="me-4" @click="handleSubmit">Salvar</v-btn>
+    <v-btn @click="clear">Limpar</v-btn>
+
+    
+  </form>
+</template>
+
 <script setup>
 import { reactive } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
-import { email, required } from '@vuelidate/validators'
-
+import { required } from '@vuelidate/validators'
 
 const initialState = {
   name: '',
@@ -45,18 +23,16 @@ const initialState = {
 }
 
 const state = reactive({
-  ...initialState,
+  ...initialState
 })
-
 
 const rules = {
   name: { required },
-  email: {  email },
 }
 
 const v$ = useVuelidate(rules, state)
 
-function clear () {
+function clear() {
   v$.value.$reset()
 
   for (const [key, value] of Object.entries(initialState)) {
@@ -64,17 +40,43 @@ function clear () {
   }
 }
 
-function handleSubmit() {
+async function handleSubmit() {
   v$.value.$validate()
 
   if (!v$.value.$error) {
-    console.log('Tudo certo!')
-  }
-  else{
-  console.log("Algo deu errado")
+    const payload = {
+      Nome: state.name,
+      Descricao: state.descricao
+    };
+
+    try {
+      const response = await fetch('http://localhost:5032/Categoria', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error('Validation errors:', data.errors);
+      } else {
+        console.log('Success:', data);
+      }
+    } catch (error) {
+      console.log("Deu ruim");
+      console.error('Request failed:', error);
+    }
   }
 }
+
+
+console.log(state);
+
 </script>
+
 <style lang="">
-    
+
 </style>
